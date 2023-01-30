@@ -1,0 +1,106 @@
+<script>
+    function getWarn(qid) {
+        return `<div class="col mt-4 w-100 d-flex align-content-center gap-2 justify-content-end text-danger" style="margin-bottom: -20px;" data-warnid="${qid}">
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                        <path
+                            d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
+                    </svg>
+                </div>
+                <div>
+                    <p>This is a required question</p>
+                </div>
+            </div>`
+    }
+
+    var submitBtn = document.querySelector('[type="submit"]');
+
+    submitBtn.addEventListener('click', (event) => {
+        var takerAnswers = [];
+        var noAnswerField = [];
+
+        document.querySelectorAll('[data-qid]').forEach(function (question, qIndex) {
+            var ansMatch = 0;
+            var radios = question.querySelectorAll('[type="radio"]');
+
+            for (var i = 0; i < radios.length; i++) {
+                if (radios[i].checked) {
+                    takerAnswers.push({
+                        questionId: qIndex,
+                        answerIdx: i
+                    });
+                    ansMatch = 1;
+                    break;
+                }
+            }
+
+            if (ansMatch == 0) {
+                noAnswerField.push(qIndex)
+            }
+        });
+
+        // use for handling warn events
+        function radioHandler(e) {
+            var qid = e.target.name.split('-')[1];
+            var warnNode = document.querySelector(`[data-warnid="${qid}"]`);
+            if (warnNode != null) {
+                warnNode.remove();
+
+                // since we alredy removed warning remove listeners for other sibling radios
+                document.querySelectorAll(`[name=choice-${qid}]`).forEach(radio => {
+                    radio.removeEventListener('change', radioHandler);
+                });
+            }
+        }
+
+        if (noAnswerField.length > 0) {
+            // notify required fields
+            noAnswerField.forEach(qId => {
+                if (document.querySelector(`[data-warnid="${qId}"]`) == null) {
+                    var warnContainer = document.querySelector(`[data-qid="${qId}"]`).firstElementChild;
+
+                    warnContainer.querySelectorAll('[type="radio"]').forEach(radio => {
+                        radio.addEventListener('change', radioHandler);
+                    });
+
+                    var div = document.createElement('div');
+                    div.innerHTML = getWarn(qId);
+                    warnContainer.append(div.firstElementChild);
+                }
+            });
+        } else {
+            // submit answer
+            document.getElementById('sbm-loader').style.display = 'block';
+
+            // disable fields
+            document.querySelectorAll('[type="radio"]').forEach(radio => {
+                radio.setAttribute('disabled', '');
+            });
+            submitBtn.setAttribute('disabled', '');
+
+            // algorithm to calculate score
+            var credElement = document.querySelector('[data-quizid]');
+
+            // use fetch api
+            fetch(`https://arfun-quiz.vercel.app/api/getscore?qid=${credElement.getAttribute('data-quizid')}&tid=${credElement.getAttribute('data-taker')}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                mode: 'cors',
+                body: JSON.stringify({
+                    "takerAnswers": takerAnswers
+                })
+            }).then(response => {
+                return response.json();
+            }).then(data => {
+                // trigger the flutter app
+                Score.postMessage(data.data);
+            }).catch(error => {
+                console.log(error);
+            })
+        }
+    });
+</script>
