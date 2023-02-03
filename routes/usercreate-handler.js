@@ -110,7 +110,20 @@ module.exports = () => {
             email: data.email,
             idNum: data.idNum,
             uid: createdUser.user.uid,
-            isArchived: data.isArchived
+            isArchived: data.isArchived,
+            section: data.section,
+          };
+        } else if (data.type == "teacher") {
+          userData = {
+            img: process.env.DEFAULT_USER_IMG,
+            role: data.type, // added to identify user role
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            phone: data.phone,
+            uid: createdUser.user.uid,
+            isArchived: data.isArchived,
+            section: data.section,
           };
         } else {
           userData = {
