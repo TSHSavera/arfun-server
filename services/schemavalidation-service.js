@@ -56,6 +56,10 @@ const teacherSchema = Joi.object({
       tlds: { allow: ["com", "net"] },
     })
     .required(),
+  section: Joi.string()
+  .min(1)
+  .message('"Section" is not allowed to be empty."')
+  .required(),
 });
 
 const studentSchema = Joi.object({
@@ -80,7 +84,11 @@ const studentSchema = Joi.object({
     .required(),
   isArchived: Joi.string()
   .min(4)
-  .message('"No student status submitted.')
+  .message('No student status submitted.')
+  .required(),
+  section: Joi.string()
+  .min(1)
+  .message('"Section" is not allowed to be empty."')
   .required(),
 });
 
