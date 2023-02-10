@@ -122,7 +122,6 @@ module.exports = () => {
             email: data.email,
             phone: data.phone,
             uid: createdUser.user.uid,
-            isArchived: data.isArchived,
             section: data.section,
           };
         } else {
