@@ -94,7 +94,7 @@ const studentSchema = Joi.object({
   .message('"Section" is not allowed to be empty."')
   .required(),
   schoolyear: Joi.string()
-  .min(1)
+  .min(4)
   .message('"Invalid year.')
   .required(),
 });
