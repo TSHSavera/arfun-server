@@ -95,7 +95,6 @@ const studentSchema = Joi.object({
   .required(),
   year: Joi.string()
   .min(4)
-  .max(4)
   .message('"No year present')
   .required(),
 });
