@@ -71,7 +71,10 @@ const studentSchema = Joi.object({
   midName: Joi.string()
     .min(1)
     .message('"Middle name" is not allowed to be empty.'),
-  lastName: Joi.string().min(1).message('"Last name" is required.').required(),
+  lastName: Joi.string()
+  .min(1)
+  .message('"Last name" is required.')
+  .required(),
   email: Joi.string()
     .email({
       minDomainSegments: 2,
@@ -89,6 +92,11 @@ const studentSchema = Joi.object({
   section: Joi.string()
   .min(1)
   .message('"Section" is not allowed to be empty."')
+  .required(),
+  year: Joi.integer()
+  .min(4)
+  .max(4)
+  .message('"No year present')
   .required(),
 });
 
