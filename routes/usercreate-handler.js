@@ -112,6 +112,7 @@ module.exports = () => {
             uid: createdUser.user.uid,
             isArchived: data.isArchived,
             section: data.section,
+            schoolyear: data.schoolyear,
           };
         } else if (data.type == "teacher") {
           userData = {
