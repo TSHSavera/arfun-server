@@ -87,6 +87,10 @@ module.exports = () => {
     var createdUser;
     var addingResult;
     //var addSection;
+    //attempt to get the same data on the server
+    const q = query(dbRef2, where("section", "==", data.section));
+    const qs = await getDocs(q);
+    
 
     try {
       createdUser = await createUserWithEmailAndPassword(
@@ -151,10 +155,7 @@ module.exports = () => {
         }
 
         //Check if the section exists in the db, if yes. Skip
-        //attempt to get the same data on the server
-          const q = query(dbRef2, where("section", "==", data.section));
-          const qs = await getDocs(q);
-          qs.forEach(async (doc) => {
+        qs.forEach(async (doc) => {
             if (doc.data().section != data.section) {
                 await addDoc(dbRef2, sectionDb).then(console.log("Success"));
             } else {
