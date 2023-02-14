@@ -86,7 +86,7 @@ module.exports = () => {
 
     var createdUser;
     var addingResult;
-    var addSection;
+    //var addSection;
 
     try {
       createdUser = await createUserWithEmailAndPassword(
@@ -117,7 +117,7 @@ module.exports = () => {
             section: data.section,
             schoolyear: data.schoolyear,
           };
-          sectionDb = data.section;
+          sectionDb = {section: data.section};
         } else if (data.type == "teacher") {
           userData = {
             img: process.env.DEFAULT_USER_IMG,
@@ -129,7 +129,7 @@ module.exports = () => {
             uid: createdUser.user.uid,
             section: data.section,
           };
-          sectionDb = data.section;
+          sectionDb = {section: data.section};
         } else {
           userData = {
             img: process.env.DEFAULT_USER_IMG,
@@ -152,14 +152,15 @@ module.exports = () => {
 
         //Check if the section exists in the db, if yes. Skip
         //attempt to get the same data on the server
-        const q = query(dbRef2, where("section", "==", data.section));
-        const qs = await getDocs(q);
-        qs.forEach(async (doc) => {
-          console.log(doc.data().section);
-          if (doc.data().section != data.section) {
-              await addDoc(dbRef2, sectionDb)
-          }
-        })
+          const q = query(dbRef2, where("section", "==", data.section));
+          const qs = await getDocs(q);
+          qs.forEach(async (doc) => {
+            if (doc.data().section != data.section) {
+                await addDoc(dbRef2, sectionDb).then(console.log("Success"));
+            } else {
+              console.log("Data already exists");
+            }
+          });
 
         // either admin or student or teacher we add it
         addingResult = await addDoc(dbRef, userData);
