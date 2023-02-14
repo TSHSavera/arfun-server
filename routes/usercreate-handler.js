@@ -16,7 +16,7 @@ const passwordGenerator = require("generate-password");
 const { sendPasswordResetMail } = require("../services/nodemail-service");
 
 const { getAuth, createUserWithEmailAndPassword } = firebaseAuth;
-const { doc, collection, addDoc, deleteDoc } = firebaseFirestore;
+const { doc, collection, addDoc, deleteDoc, getDocs, query, where } = firebaseFirestore;
 
 function checkBody(req, res, next) {
   if (
@@ -86,6 +86,7 @@ module.exports = () => {
 
     var createdUser;
     var addingResult;
+    var addSection;
 
     try {
       createdUser = await createUserWithEmailAndPassword(
@@ -98,8 +99,10 @@ module.exports = () => {
         console.log("New user account created.");
 
         var dbRef = collection(db, "users");
+        var dbRef2 = collection(db, "sections");
 
         var userData = {};
+        var sectionDb;
 
         if (data.type == "student") {
           userData = {
@@ -114,6 +117,7 @@ module.exports = () => {
             section: data.section,
             schoolyear: data.schoolyear,
           };
+          sectionDb = data.section;
         } else if (data.type == "teacher") {
           userData = {
             img: process.env.DEFAULT_USER_IMG,
@@ -125,6 +129,7 @@ module.exports = () => {
             uid: createdUser.user.uid,
             section: data.section,
           };
+          sectionDb = data.section;
         } else {
           userData = {
             img: process.env.DEFAULT_USER_IMG,
@@ -145,6 +150,16 @@ module.exports = () => {
           userData['midName'] = data.midName;
         }
 
+        //Check if the section exists in the db, if yes. Skip
+        //attempt to get the same data on the server
+        const q = query(dbRef2, where("section", "==", data.section));
+        const qs = await getDocs(q);
+        qs.forEach(async (doc) => {
+          console.log(doc.data().section);
+          if (doc.data().section != data.section) {
+              await addDoc(dbRef2, sectionDb)
+          }
+        })
 
         // either admin or student or teacher we add it
         addingResult = await addDoc(dbRef, userData);
