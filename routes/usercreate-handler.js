@@ -102,7 +102,7 @@ module.exports = () => {
         var dbRef2 = collection(db, "sections");
 
         var userData = {};
-        var sectionDb;
+        var sectionDb = {};
 
         if (data.type == "student") {
           userData = {
