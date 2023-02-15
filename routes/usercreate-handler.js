@@ -86,12 +86,7 @@ module.exports = () => {
 
     var createdUser;
     var addingResult;
-    //var addSection;
-    //attempt to get the same data on the server
-    const q = query(dbRef2, where("section", "==", data.section));
-    const qs = await getDocs(q);
     
-
     try {
       createdUser = await createUserWithEmailAndPassword(
         auth,
@@ -103,10 +98,8 @@ module.exports = () => {
         console.log("New user account created.");
 
         var dbRef = collection(db, "users");
-        var dbRef2 = collection(db, "sections");
 
         var userData = {};
-        var sectionDb = {};
 
         if (data.type == "student") {
           userData = {
@@ -153,15 +146,6 @@ module.exports = () => {
         } else {
           userData['midName'] = data.midName;
         }
-
-        //Check if the section exists in the db, if yes. Skip
-        qs.forEach(async (doc) => {
-            if (doc.data().section != data.section) {
-                await addDoc(dbRef2, sectionDb).then(console.log("Success"));
-            } else {
-              console.log("Data already exists");
-            }
-          });
 
         // either admin or student or teacher we add it
         addingResult = await addDoc(dbRef, userData);
