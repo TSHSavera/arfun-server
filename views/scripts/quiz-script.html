@@ -83,8 +83,10 @@
             // algorithm to calculate score
             var credElement = document.querySelector('[data-quizid]');
 
+            var domain = "https://arfun-server.vercel.app/api";
+
             // use fetch api
-            fetch(`https://arfun-quiz.vercel.app/api/getscore?qid=${credElement.getAttribute('data-quizid')}&tid=${credElement.getAttribute('data-taker')}`, {
+            fetch(`${domain}/getscore?qid=${credElement.getAttribute('data-quizid')}&tid=${credElement.getAttribute('data-taker')}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
