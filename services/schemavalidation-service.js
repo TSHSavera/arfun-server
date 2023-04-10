@@ -60,10 +60,6 @@ const teacherSchema = Joi.object({
   .min(1)
   .message('"Section" is not allowed to be empty."')
   .required(),
-  isArchived: Joi.string()
-  .min(4)
-  .message('No teacher status submitted.')
-  .required(),
 });
 
 const studentSchema = Joi.object({
