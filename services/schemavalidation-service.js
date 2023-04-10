@@ -22,7 +22,10 @@ const adminSchema = Joi.object({
   midName: Joi.string()
     .min(1)
     .message('"Middle name" is not allowed to be empty.'),
-  lastName: Joi.string().min(1).message('"Last name" is required.').required(),
+  lastName: Joi.string()
+  .min(1)
+  .message('"Last name" is required.')
+  .required(),
   phone: Joi.string()
     .regex(new RegExp(phoneRegEx, "m"))
     .message(errorMessage.INV_PHONE)
@@ -48,7 +51,10 @@ const teacherSchema = Joi.object({
   midName: Joi.string()
     .min(1)
     .message('"Middle name" is not allowed to be empty.'),
-  lastName: Joi.string().min(1).message('"Last name" is required.').required(),
+  lastName: Joi.string()
+  .min(1)
+  .message('"Last name" is required.')
+  .required(),
   phone: Joi.string()
     .regex(new RegExp(phoneRegEx, "m"))
     .message(errorMessage.INV_PHONE)
