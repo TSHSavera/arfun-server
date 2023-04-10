@@ -23,7 +23,7 @@ const adminSchema = Joi.object({
     .min(1)
     .message('"Middle name" is not allowed to be empty.'),
   lastName: Joi.string().min(1).message('"Last name" is required.').required(),
-  lastName: Joi.string().min(1).message('"Last name" is required.').required(),
+  //lastName: Joi.string().min(1).message('"Last name" is required.').required(),
   phone: Joi.string()
     .regex(new RegExp(phoneRegEx, "m"))
     .message(errorMessage.INV_PHONE)
@@ -33,6 +33,10 @@ const adminSchema = Joi.object({
       minDomainSegments: 2,
       tlds: { allow: ["com", "net"] },
     })
+    .required(),
+  isArchived: Joi.string()
+    .min(4)
+    .message('No teacher status submitted.')
     .required(),
 });
 
