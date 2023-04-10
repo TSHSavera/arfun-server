@@ -33,10 +33,10 @@ const adminSchema = Joi.object({
       tlds: { allow: ["com", "net"] },
     })
     .required(),
-    isArchived: Joi.string()
-  .min(4)
-  .message('No admin status submitted.')
-  .required(),
+  isArchived: Joi.string()
+    .min(4)
+    .message('No admin status submitted.')
+    .required(),
 });
 
 const teacherSchema = Joi.object({
