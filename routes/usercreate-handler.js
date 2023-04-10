@@ -125,6 +125,7 @@ module.exports = () => {
             phone: data.phone,
             uid: createdUser.user.uid,
             section: data.section,
+            isArchived: data.isArchived,
           };
           sectionDb = {section: data.section};
         } else {
@@ -136,7 +137,7 @@ module.exports = () => {
             email: data.email,
             phone: data.phone,
             uid: createdUser.user.uid,
-            isArchived: data.isArchived
+            //isArchived: data.isArchived
           };
         }
 
